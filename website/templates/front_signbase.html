@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+{#    <meta name="csrf-token" content="#">#}
+    <title>{% block title %}{% endblock %}</title>
+    <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+    <script src="{% static 'js/zlparam.js' %}"></script>
+    <script src="{% static 'js/zlajax.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/sweetalert.css' %}">
+    <script src="{% static 'js/sweetalert.min.js' %}"></script>
+    <script src="{% static 'js/zlalert.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/front_signbase.css' %}">
+    {% block head %}
+
+    {% endblock %}
+</head>
+<body>
+    <div class="outer-box">
+        <div class="logo-box">
+            <a href="/">
+                <img src="#" alt="">
+            </a>
+        </div>
+        <h2 class="page-title">
+            {% block h2_block %}{% endblock %}
+        </h2>
+        <div class="sign-box">
+            {% block signbox %}{% endblock %}
+        </div>
+        <span style="display:none;" id="return-to-span">#</span>
+    </div>
+</body>
+</html>

@@ -1,0 +1,97 @@
+{% extends 'front_base.html' %}
+{% load staticfiles %}
+{% block title %}
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/front_postdetail.css' %}">
+    <script src="{% static 'js/front_postdetail.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/ueditor/UE/third-party/SyntaxHighlighter/shCoreDefault.css' %}">
+        <script type="text/javascript" src="{% static '/ueditor/UE/third-party/SyntaxHighlighter/shCore.js' %}"></script>
+        <script type="text/javascript" src="{% static '/ueditor/UE/ueditor.config.js' %}"></script>
+        <script type="text/javascript" src="{% static '/ueditor/UE/ueditor.all.min.js' %}"></script>
+        <script type="text/javascript" src="{% static '/ueditor/UE/lang/zh-cn/zh-cn.js' %}"></script>
+
+        <script type="text/javascript">
+            var ue = UE.getEditor('editor');
+            SyntaxHighlighter.all();
+        </script>
+{% endblock %}
+
+{% block body %}
+    <div class="container_wrap">
+        <div class="left-container">
+            <div class="post-container">
+                <div class="post-container-inner">
+                    <div class="post-top">
+                        <h2>{{ tie.title }}</h2>
+                        <p class="post-info">
+                            <span>发表时间：{{ tie.add_time }}</span>
+                            <span>作者：{{ tie.author.username }}</span>
+                            <span>所属板块：{{ tie.board.name }}</span>
+                            <span class="comment-count">评论数：{{ tie.comment_num }}</span>
+                            <span class="read-count">阅读数：{{ tie.read_num }}</span>
+                        </p>
+                    </div>
+                    <div class="post-content">
+                        {% autoescape off %}
+                           {{ tie.content }}
+                        {% endautoescape %}
+
+                    </div>
+
+                </div>
+                <div class="comment-btn-group">
+                    <form action="{% url 'comment' %}" method="post">
+                        <input type="hidden" name="tie_id" value="{{ tie.id }}">
+                    <script id="editor" type="text/plain" name="content"></script>
+                        <button type="submit" class="btn btn-danger" id="submit-btn">发表评论</button>
+                    {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+            <div class="comment-list-group">
+                <div class="comment-list-group-inner">
+                    <div class="comment-title">
+                        <p>评论列表</p>
+                    </div>
+                    <ul class="comment-list">
+                        {% for comment in comments %}
+                             <li>
+                                <div class="comment-img">
+                                    <a href="#"><img class="user-head" src="{{ MEDIA_URL }}{{ comment.author.image }}" alt=""></a>
+                                </div>
+                                <div class="comment-content">
+                                    <p class="author-info">
+                                        <span>{{ comment.author.username }}</span>
+                                        <span>{{ comment.add_time }}</span>
+                                    </p>
+                                        <div class="origin-comment-group">
+                                            <blockquote>
+                                                {{ comment.author.username }} 发表于 {{ comment.add_time }}
+                                                <p>{% autoescape off %}{{ comment.content }}{% endautoescape %}</p>
+                                            </blockquote>
+                                        </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="right-container">
+            <div class="author-group">
+                <div class="avatar-group">
+                    <a href="{% url 'users:user_info' %}"><img src="{{ MEDIA_URL }}{{ tie.author.image }}" alt="" class="avatar-img"></a>
+                </div>
+                <p class="username">{{ tie.author.username }}</p>
+                <p class="txt">昵称：{{ tie.author.nick_name }}</p>
+                <div class="btn-box">
+                    <a href="{% url 'users:user_info' %}" target="_blank" class="btn btn-warning">Ta的主页</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

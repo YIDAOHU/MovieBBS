@@ -1,0 +1,121 @@
+{% extends "front_base.html" %}
+{% load staticfiles %}
+
+{% block title %}电影论坛-首页{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/front_index.css' %}">
+    <script src="{% static 'js/bootstrap.min.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="lg-container">
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner" role="listbox">
+
+    <div class="item active">
+        <a href="{% url 'detail' banners.0.tie_id %}" target="_blank"><img src="{{ MEDIA_URL }}{{ banners.0.image }}" alt="..."></a>
+
+    </div>
+    <div class="item">
+       <a href="{% url 'detail' banners.1.tie_id %}" target="_blank"><img src="{{ MEDIA_URL }}{{ banners.1.image }}" alt="..."></a>
+    </div>
+    <div class="item">
+       <a href="{% url 'detail' banners.2.tie_id %}" target="_blank"><img src="{{ MEDIA_URL }}{{ banners.2.image }}" alt="..."></a>
+    </div>
+
+  </div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
+    <div class="post-group">
+        <ul class="post-group-head">
+            <li class="{% if sort == '' %}list-active{% endif %}"><a href="?sort=">最新 </a></li>
+            <li class="{% if sort == 'essence' %}list-active{% endif %}"><a href="?sort=essence&current_id={{ current_id }}">精华帖子</a></li>
+            <li class="{% if sort == 'read' %}list-active{% endif %}"><a href="?sort=read&current_id={{ current_id }}">阅读最多</a></li>
+            <li class="{% if sort == 'comment' %}list-active{% endif %}"><a href="?sort=comment&current_id={{ current_id }}">评论最多</a></li>
+        </ul>
+        {% for tie in ties.object_list %}
+            <ul class="post-list-group">
+            <li>
+                <div class="author-avatar-group">
+                    <img src="{{ MEDIA_URL }}{{ tie.author.image }}" alt="">
+                </div>
+                <div class="post-info-group">
+                    <a class="title_name" href="{% url 'detail' tie.id %}"><p class="post-title">{{ tie.title }}{% if tie.is_essence %}
+                        <span class="label label-danger">精</span>{% endif %}</a></p>
+
+                    <p class="post-info">
+                        <span>作者：{{ tie.author.username }}</span>
+                        <span>发布时间：{{ tie.add_time }}</span>
+                        <span>评论：{{ tie.comment_num }}</span>
+                        <span>阅读数：{{ tie.read_num }}</span>
+                    </p>
+                </div>
+            </li>
+        </ul>
+        {% endfor %}
+
+    </div>
+            <div class="page-nav" style="text-align: center;">
+            <nav aria-label="...">
+                <ul class="pagination">
+                    {% if ties.has_previous %}
+                        <li><a href="?{{ ties.previous_page_number.querystring }}">上一页</a></li>
+                    {% else %}
+                        <li class="disabled"><span>上一页</span></li>
+                    {% endif %}
+               {% for page in ties.pages %}
+                  {% if page %}
+                    {% ifequal page ties.number %}
+                        <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                    {% else %}
+                       <li><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                    {% endifequal %}
+                  {% else %}
+                      <li class="none"><a href="">...</a></li>
+                 {% endif %}
+               {% endfor %}
+        {% if ties.has_next %}
+                <li class="long"><a href="?{{ ties.next_page_number.querystring }}">下一页</a></li>
+        {% else %}
+            <li class="disabled"><span>下一页</span></li>
+        {% endif %}
+
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+    <div class="sm-container">
+        <div style="padding-bottom:10px;">
+            <a href="{% url 'add_tie' %}" class="btn btn-warning btn-block">发布帖子</a>
+        </div>
+        <div class="list-group">
+            <a href="?current_id=" class="{% if current_id == '' %}list-group-item active{% else %}list-group-item{% endif %}">所有板块</a>
+          {% for board in boards %}
+              <a href="?current_id={{ board.id }}&sort={{ sort }}" class="{% ifequal current_id board.id|stringformat:"i" %}list-group-item active{% else %}list-group-item{% endifequal %}">{{ board.name }}</a>
+          {% endfor %}
+
+
+        </div>
+    </div>
+<script type="text/javascript" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+{% endblock %}

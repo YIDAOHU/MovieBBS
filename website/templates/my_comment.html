@@ -1,0 +1,48 @@
+{% extends 'front_base.html' %}
+{% load staticfiles %}
+{% block title %}
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/front_postdetail.css' %}">
+    <script src="{% static 'js/front_postdetail.js' %}"></script>
+
+
+{% endblock %}
+
+{% block body %}
+    <div class="container_wrap">
+        <div class="left-container">
+            <div class="comment-list-group">
+                <div class="comment-list-group-inner">
+                    <div class="comment-title">
+                        <p>评论列表</p>
+                    </div>
+                    <ul class="comment-list">
+                        {% for comment in comments %}
+                             <li>
+                                <div class="comment-img">
+                                    <a href="#"><img class="user-head" src="{{ MEDIA_URL }}{{ comment.author.image }}" alt=""></a>
+                                </div>
+                                <div class="comment-content">
+                                    <p class="author-info">
+                                        <span>{{ comment.author.username }}</span>
+                                        <span>{{ comment.add_time }}</span>
+                                    </p>
+                                        <div class="origin-comment-group">
+                                            <blockquote>
+                                                {{ comment.author.username }} 发表于 {{ comment.add_time }}
+                                                <p>{% autoescape off %}{{ comment.content }}{% endautoescape %}</p>
+                                                <a href="{% url 'detail' comment.post.id %}">点击查看帖子详情</a>
+                                            </blockquote>
+                                        </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "front_base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    发布帖子
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{% static '/ueditor/UE/third-party/SyntaxHighlighter/shCoreDefault.css' %}">
+        <script type="text/javascript" src="{% static '/ueditor/UE/third-party/SyntaxHighlighter/shCore.js' %}"></script>
+        <script type="text/javascript" src="{% static '/ueditor/UE/ueditor.config.js' %}"></script>
+        <script type="text/javascript" src="{% static '/ueditor/UE/ueditor.all.min.js' %}"></script>
+        <script type="text/javascript" src="{% static '/ueditor/UE/lang/zh-cn/zh-cn.js' %}"></script>
+
+        <script type="text/javascript">
+            var ue = UE.getEditor('editor');
+            SyntaxHighlighter.all();
+        </script>
+{% endblock %}
+
+{% block body %}
+    <form action="{% url 'add_tie' %}" method="post">
+        <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon">标题</span>
+            <input type="text" class="form-control" name="title">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon">板块</span>
+            <select name="board_id" class="form-control">
+                {% for board in boards %}
+                    <option value="{{ board.id }}">{{ board.name }}</option>
+                {% endfor %}
+
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+       <script id="editor" type="text/plain" name="content"></script>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-danger" id="submit-btn">发布帖子</button>
+    </div>
+    {% csrf_token %}
+    </form>
+{% endblock %}

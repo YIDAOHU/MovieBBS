@@ -1,0 +1,65 @@
+{% extends "front_base.html" %}
+{% load staticfiles %}
+
+{% block title %}电影论坛-首页{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/front_index.css' %}">
+    <script src="{% static 'js/bootstrap.min.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="lg-container">
+    <div class="post-group">
+
+        {% for tie in ties.object_list %}
+            <ul class="post-list-group">
+            <li>
+                <div class="author-avatar-group">
+                    <img src="{{ MEDIA_URL }}{{ tie.author.image }}" alt="">
+                </div>
+                <div class="post-info-group">
+                    <a class="title_name" href="{% url 'detail' tie.id %}"><p class="post-title">{{ tie.title }}{% if tie.is_essence %}
+                        <span class="label label-danger">精</span>{% endif %}</a></p>
+
+                    <p class="post-info">
+                        <span>作者：{{ tie.author.username }}</span>
+                        <span>发布时间：{{ tie.add_time }}</span>
+                        <span>评论：{{ tie.comment_num }}</span>
+                        <span>阅读数：{{ tie.read_num }}</span>
+                    </p>
+                </div>
+            </li>
+        </ul>
+        {% endfor %}
+
+    </div>
+            <div class="page-nav" style="text-align: center;">
+            <nav aria-label="...">
+                <ul class="pagination">
+                    {% if ties.has_previous %}
+                        <li><a href="?{{ ties.previous_page_number.querystring }}">上一页</a></li>
+                    {% else %}
+                        <li class="disabled"><span>上一页</span></li>
+                    {% endif %}
+               {% for page in ties.pages %}
+                  {% if page %}
+                    {% ifequal page ties.number %}
+                        <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                    {% else %}
+                       <li><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                    {% endifequal %}
+                  {% else %}
+                      <li class="none"><a href="">...</a></li>
+                 {% endif %}
+               {% endfor %}
+        {% if ties.has_next %}
+                <li class="long"><a href="?{{ ties.next_page_number.querystring }}">下一页</a></li>
+        {% else %}
+            <li class="disabled"><span>下一页</span></li>
+        {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+{% endblock %}
